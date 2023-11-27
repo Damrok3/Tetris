@@ -4,6 +4,11 @@
 
 Board::Board(int x, int y)
 {
+	this->board = new char*[y];
+	for (int i = 0; i < y; i++)
+	{
+		this->board[i] = new char[x];
+	}
 	this->x = x;
 	this->y = y;
 	for (int i = 0; i < this->y; i++)
@@ -12,18 +17,17 @@ Board::Board(int x, int y)
 		{
 			if (i == 0 || i == this->y - 1)
 			{
-				board += '-';
+				board[i][j] = '-';
 			}
 			else if (j == 0 || j == this->x - 1)
 			{
-				board += "|";
+				board[i][j] = '|';
 			}
 			else
 			{
-				board += " ";
+				board[i][j] = ' ';
 			}
 		}
-		board += "\n";
 	}
 }
 
@@ -90,6 +94,14 @@ Block::Block(int b_width, int b_height)
 
 std::ostream & operator<<(std::ostream& os, const Board& b)
 {
-	return os << b.board;
+	for (int i = 0; i < b.y; i++)
+	{
+		for (int j = 0; j < b.x; j++)
+		{
+			os << b.board[i][j];
+		}
+		os << std::endl;
+	}
+	return os;
 }
 
