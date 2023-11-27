@@ -36,9 +36,21 @@ Board::Board(int x, int y)
 	}
 }
 
+Board::~Board()
+{
+	for (int i = 0; i < this->y; i++)
+	{
+		delete[] board[i];
+		delete[] board_buffer[i];
+	}
+	delete[] board;
+	delete[] board_buffer;
+}
+
 Block::Block(int b_width, int b_height)
 {
-	std::srand(std::time(NULL));
+	std::srand(std::rand() ^ std::time(NULL));
+	
 	this->id = std::rand() % 7;
 
 	switch (this->id)
@@ -55,19 +67,19 @@ Block::Block(int b_width, int b_height)
 			this->coord_x = std::rand() % (b_width - 4) + 1;
 			break;
 		case 1: // J
-			this->block =	"ooo      "
-							"ooo      "
-							"ooooooooo"
-							"ooooooooo";
+			this->block =	"LLL      "
+							"LLL      "
+							"LLLLLLLLL"
+							"LLLLLLLLL";
 			this->width = 9;
 			this->height = 4;
 			this->coord_x = std::rand() % (b_width - 10) + 1;
 			break;
 		case 2: // L
-			this->block =	"      ooo"
-							"      ooo"
-							"ooooooooo"
-							"ooooooooo";
+			this->block =	"      %%%"
+							"      %%%"
+							"%%%%%%%%%"
+							"%%%%%%%%%";
 			this->width = 9;
 			this->height = 4;
 			this->coord_x = std::rand() % (b_width - 10) + 1;
@@ -82,28 +94,28 @@ Block::Block(int b_width, int b_height)
 			this->coord_x = std::rand() % (b_width - 7) + 1;
 			break;
 		case 4: // S
-			this->block =	"   oooooo"
-							"   oooooo"
-							"oooooo   "
-							"oooooo   ";
+			this->block =	"   ssssss"
+							"   ssssss"
+							"ssssss   "
+							"ssssss   ";
 			this->width = 9;
 			this->height = 4;
 			this->coord_x = std::rand() % (b_width - 10) + 1;
 			break;
 		case 5: // Z
-			this->block =	"oooooo   "
-							"oooooo   "
-							"   oooooo"
-							"   oooooo";
+			this->block =	"zzzzzz   "
+							"zzzzzz   "
+							"   zzzzzz"
+							"   zzzzzz";
 			this->width = 9;
 			this->height = 4;
 			this->coord_x = std::rand() % (b_width - 10) + 1;
 			break;
 		case 6: // T
-			this->block =	"   ooo   "
-							"   ooo   "
-							"ooooooooo"
-							"ooooooooo";
+			this->block =	"   TTT   "
+							"   TTT   "
+							"TTTTTTTTT"
+							"TTTTTTTTT";
 			this->width = 9;
 			this->height = 4;
 			this->coord_x = std::rand() % (b_width - 10) + 1;

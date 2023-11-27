@@ -11,7 +11,7 @@ private:
 
 public:
 	Board(int, int);
-	~Board() = default;
+	~Board();
 	//return width of the board
 	int get_x() { return x; }
 	//return height of the board

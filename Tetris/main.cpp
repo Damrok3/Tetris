@@ -12,7 +12,7 @@ int main()
 {
 	Board board(40, 20);
 	std::vector<Block*> blocks;
-	std::chrono::milliseconds timespan(1000);
+	std::chrono::milliseconds timespan(100);
 	//main loop
 	while (true)
 	{
@@ -55,7 +55,10 @@ void board_update(Board& b, std::vector<Block*>& blocks)
 			{
 				for (int x = block_x; x < block_x + block_width; x++)
 				{
-					board[y][x] = block[index];
+					if (block[index] != ' ')
+					{
+						board[y][x] = block[index];
+					}
 					index++;
 				}
 			}
