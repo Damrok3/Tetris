@@ -7,6 +7,7 @@ private:
 	int x;
 	int y;
 	char** board;
+	char** board_buffer;
 
 public:
 	Board(int, int);
@@ -17,6 +18,7 @@ public:
 	int get_y() { return y; }
 	//return a pointer to 2d char array
 	char** get_board() { return board; }
+	char** get_board_buffer() { return board_buffer; }
 	friend std::ostream& operator<< (std::ostream&, const Board&);
 	
 };
@@ -26,7 +28,7 @@ class Block
 {
 private:
 	int coord_x = 0;
-	int coord_y = 0;
+	int coord_y = 1;
 	int id;
 	bool at_the_bottom = false;
 	std::string block;
@@ -41,6 +43,9 @@ public:
 
 	//boolean, checks if the block is currently in motion or at the bottom
 	bool is_atb() { return at_the_bottom; }
+
+	//sets at_the_bottom flag to true
+	void set_atb() { at_the_bottom = true; }
 
 	//set block x coordinate
 	void set_x(int x) { coord_x = x; }

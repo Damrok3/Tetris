@@ -1,22 +1,29 @@
 #include <iostream>
 #include "tetris.h"
 #include <vector>
-
+#include <Windows.h>
+#include <chrono>
+#include <thread>
 void block_update(Board&, std::vector<Block*>&);
 void board_update(Board&, std::vector<Block*>&);
+void setCursorPosition(int, int);
 
 int main()
 {
 	Board board(40, 20);
 	std::vector<Block*> blocks;
-
+	std::chrono::milliseconds timespan(1000);
 	//main loop
-
-	block_update(board, blocks);
-	board_update(board, blocks);
-	char** board_buff = board.get_board();
-	board_buff[4][6] = 's';
-	std::cout << board;
+	while (true)
+	{
+		block_update(board, blocks);
+		board_update(board, blocks);
+		std::cout << board << std::flush;
+		setCursorPosition(0, 0);
+		//system("pause");
+		std::this_thread::sleep_for(timespan);
+	}
+	
 
 
 	return 0;
@@ -25,7 +32,15 @@ int main()
 void board_update(Board& b, std::vector<Block*>& blocks)
 {
 	//WIP
-	char** board_buffer = b.get_board();
+	char** board = b.get_board();
+	char** board_buffer = b.get_board_buffer();
+	for (int i = 0; i < b.get_y(); i++)
+	{
+		for (int j = 0; j < b.get_x(); j++)
+		{
+			board[i][j] = board_buffer[i][j];
+		}
+	}
 	for (int i = 0; i < blocks.size(); i++)
 	{
 		if (blocks[i]->is_atb() == false)
@@ -35,11 +50,13 @@ void board_update(Board& b, std::vector<Block*>& blocks)
 			int block_width = blocks[i]->get_width();
 			int block_height = blocks[i]->get_height();
 			std::string block = blocks[i]->get_block();
+			int index = 0;
 			for (int y = block_y; y < block_y + block_height; y++)
 			{
 				for (int x = block_x; x < block_x + block_width; x++)
 				{
-
+					board[y][x] = block[index];
+					index++;
 				}
 			}
 			break;
@@ -69,6 +86,29 @@ void block_update(Board& b, std::vector<Block*>& blocks)
 	//block still in the air
 	else 
 	{
-		//block behavior here
+		if (blocks[i]->get_y() < b.get_y() - blocks[i]->get_height() - 1)
+		{
+			blocks[i]->set_y(blocks[i]->get_y() + 1);
+		}
+		else
+		{
+			blocks[i]->set_atb();
+			char** board_buffer = b.get_board_buffer();
+			char** board = b.get_board();
+			for (int i = 0; i < b.get_y(); i++)
+			{
+				for (int j = 0; j < b.get_x(); j++)
+				{
+					board_buffer[i][j] = board[i][j];
+				}
+			}
+		}
 	}
+}
+
+void setCursorPosition(int x , int y)
+{
+	static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD coord = { (SHORT)x, (SHORT)y };
+	SetConsoleCursorPosition(hOut, coord);
 }
