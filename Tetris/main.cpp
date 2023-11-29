@@ -4,28 +4,31 @@
 #include <Windows.h>
 #include <chrono>
 #include <thread>
+#include <conio.h>
 void block_update(Board&, std::vector<Block*>&);
 void board_update(Board&, std::vector<Block*>&);
 void setCursorPosition(int, int);
 
+
+//FIX RNG OF BLOCK COORDINATES BECAUSE THEY DON'T MATCH THE GRID
 int main()
 {
-	Board board(40, 20);
+	Board board(42, 20);
 	std::vector<Block*> blocks;
-	std::chrono::milliseconds timespan(100);
+	std::chrono::milliseconds timespan(1000);
 	//main loop
 	while (true)
 	{
+		
 		block_update(board, blocks);
 		board_update(board, blocks);
+		
 		std::cout << board << std::flush;
 		setCursorPosition(0, 0);
 		//system("pause");
 		std::this_thread::sleep_for(timespan);
 	}
 	
-
-
 	return 0;
 }
 
@@ -69,6 +72,15 @@ void board_update(Board& b, std::vector<Block*>& blocks)
 
 void block_update(Board& b, std::vector<Block*>& blocks)
 {
+	int input = 0;
+	if (_kbhit())
+	{
+		input = _getch();
+		if (input == 224)
+		{
+			input = _getch();
+		}
+	}
 	int i = 0;
 	for (i; i < blocks.size(); i++)
 	{
@@ -92,6 +104,21 @@ void block_update(Board& b, std::vector<Block*>& blocks)
 		if (blocks[i]->get_y() < b.get_y() - blocks[i]->get_height() - 1)
 		{
 			blocks[i]->set_y(blocks[i]->get_y() + 1);
+			if (input != 0)
+			{
+				switch (input)
+				{
+					case 75:
+						if(blocks[i]->get_x() > 3)
+							blocks[i]->set_x(blocks[i]->get_x() - 3);
+						break;
+					case 77:
+						if (blocks[i]->get_x() < b.get_x() - blocks[i]->get_width() -2)
+							blocks[i]->set_x(blocks[i]->get_x() + 3);
+						break;
+
+				}
+			}
 		}
 		else
 		{
