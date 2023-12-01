@@ -49,6 +49,21 @@ Board::~Board()
 	delete[] board_buffer;
 }
 
+void Block::rotate()
+{
+	std::string altblocks[23];
+	altblocks[0] =  "***" //2
+					"***"
+					"***"
+					"***"
+					"***"
+					"***";
+
+	altblocks[7] =	"*********"
+					"*********";
+}
+
+
 Block::Block(int board_width, int board_height)
 {
 	std::srand(std::rand() ^ std::time(NULL));
@@ -58,76 +73,71 @@ Block::Block(int board_width, int board_height)
 	switch (this->id)
 	{
 		case 0: // I
-			this->block =	"***" 
+			this->block =	"***" //2
+							"***"
+							"***"
 							"***"
 							"***"
 							"***"
 							"***"
 							"***";
 			this->width = 3;
-			this->height = 6;
-			this->coord_x = generate_coord_x(board_width, 4);
-			//this->coord_x = std::rand() % (b_width - 4) + 1;
+			this->height = 8;
+			this->coord_x = generate_coord_x(board_width, this->width);
 			break;
 		case 1: // J
-			this->block =	"LLL      "
+			this->block =	"LLL      " //4
 							"LLL      "
 							"LLLLLLLLL"
 							"LLLLLLLLL";
 			this->width = 9;
 			this->height = 4;
-			this->coord_x = generate_coord_x(board_width, 10);
-			//this->coord_x = std::rand() % (b_width - 10) + 1;
+			this->coord_x = generate_coord_x(board_width, this->width);
 			break;
 		case 2: // L
-			this->block =	"      %%%"
+			this->block =	"      %%%" //4
 							"      %%%"
 							"%%%%%%%%%"
 							"%%%%%%%%%";
 			this->width = 9;
 			this->height = 4;
-			this->coord_x = generate_coord_x(board_width, 10);
-			//this->coord_x = std::rand() % (b_width - 10) + 1;
+			this->coord_x = generate_coord_x(board_width, this->width);
 			break;
 		case 3: // O
-			this->block =	"oooooo"
+			this->block =	"oooooo" //1
 							"oooooo"
 							"oooooo"
 							"oooooo";
 			this->width = 6;
 			this->height = 4;
-			this->coord_x = generate_coord_x(board_width, 7);
-			//this->coord_x = std::rand() % (b_width - 7) + 1;
+			this->coord_x = generate_coord_x(board_width, this->width);
 			break;
 		case 4: // S
-			this->block =	"   ssssss"
+			this->block =	"   ssssss" //2
 							"   ssssss"
 							"ssssss   "
 							"ssssss   ";
 			this->width = 9;
 			this->height = 4;
-			this->coord_x = generate_coord_x(board_width, 10);
-			//this->coord_x = std::rand() % (b_width - 10) + 1;
+			this->coord_x = generate_coord_x(board_width, this->width);
 			break;
 		case 5: // Z
-			this->block =	"zzzzzz   "
+			this->block =	"zzzzzz   " //2
 							"zzzzzz   "
 							"   zzzzzz"
 							"   zzzzzz";
 			this->width = 9;
 			this->height = 4;
-			this->coord_x = generate_coord_x(board_width, 10);
-			//this->coord_x = std::rand() % (b_width - 10) + 1;
+			this->coord_x = generate_coord_x(board_width, this->width);
 			break;
 		case 6: // T
-			this->block =	"   TTT   "
+			this->block =	"   TTT   " //4
 							"   TTT   "
 							"TTTTTTTTT"
 							"TTTTTTTTT";
 			this->width = 9;
 			this->height = 4;
-			this->coord_x = generate_coord_x(board_width, 10);
-			//this->coord_x = std::rand() % (b_width - 10) + 1;
+			this->coord_x = generate_coord_x(board_width, this->width);
 			break;
 	}
 }
@@ -148,11 +158,11 @@ std::ostream & operator<<(std::ostream& os, const Board& b)
 int generate_coord_x(int board_width, int block_size)
 {
 	std::srand(std::rand() ^ std::time(NULL));
-	int random_nr = std::rand() % (board_width - block_size-2) + 1;
+	int random_nr = std::rand() % (board_width - block_size - 1) + 1;
 	int reminder = random_nr % 3;
 	if (reminder != 0)
 	{
 		random_nr += (3 - reminder);
 	}
-	return random_nr;
+	return random_nr - 2;
 }

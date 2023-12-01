@@ -39,6 +39,8 @@ public:
 	//takes in width and height of the board, in order to adjust coordinate range of where it can spawn to scale of the board
 	Block(int, int);
 
+	Block(const Block&);
+
 	~Block() = default;
 
 	//boolean, checks if the block is currently in motion or at the bottom
@@ -64,6 +66,8 @@ public:
 
 	//return block height
 	int get_height() { return height; }
+
+	void rotate();
 
 	//returns string which contains shape of the block
 	std::string get_block() { return block; }

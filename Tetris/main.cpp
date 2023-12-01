@@ -19,11 +19,11 @@ inline int get_arrow_key_input();
 //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 //std::cout << "exec time: " << duration.count() << std::endl;
 
-std::chrono::milliseconds timespan(500);
+std::chrono::milliseconds timespan(200);
 
 int main()
 {
-	Board board(42, 20);
+	Board board(32, 42);
 	std::vector<Block*> blocks;
 	//main loop
 	while (true)
@@ -112,7 +112,7 @@ void block_update(Board& b, std::vector<Block*>& blocks)
 							blocks[i]->set_x(blocks[i]->get_x() - 3);
 						break;
 					case 77:
-						if (blocks[i]->get_x() < b.get_x() - blocks[i]->get_width() - 3 && !check_if_block_intersects(b, blocks[i], 2))
+						if (blocks[i]->get_x() < b.get_x() - blocks[i]->get_width() - 2 && !check_if_block_intersects(b, blocks[i], 2))
 							blocks[i]->set_x(blocks[i]->get_x() + 3);
 						break;
 					
@@ -163,7 +163,7 @@ bool check_if_block_intersects(Board& b, Block* block, short int direction)
 					}
 					break;
 				case 2:
-					if (board[i + 1][j] != ' ' && block_str[index] != ' ')
+					if (board[i][j + 1] != ' ' && block_str[index] != ' ')
 					{
 						intersects = true;
 						return intersects;
