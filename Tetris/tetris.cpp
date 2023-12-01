@@ -52,15 +52,112 @@ Board::~Board()
 void Block::rotate()
 {
 	std::string altblocks[23];
-	altblocks[0] =  "***" //2
+	altblocks[0] =  "***"
+					"***"
+					"***"
 					"***"
 					"***"
 					"***"
 					"***"
 					"***";
 
-	altblocks[7] =	"*********"
-					"*********";
+	altblocks[7] =	"************"
+					"************";
+
+	altblocks[1] =	"LLL      " 
+					"LLL      "
+					"LLLLLLLLL"
+					"LLLLLLLLL";
+
+	altblocks[8] =	"LLLLLL"
+					"LLLLLL"
+					"LLL   "
+					"LLL   "
+					"LLL   "
+					"LLL   ";
+
+	altblocks[9] =	"LLLLLLLLL"
+					"LLLLLLLLL"
+					"      LLL"
+					"      LLL";
+	
+	altblocks[10] = "   LLL"
+					"   LLL"
+					"   LLL"
+					"   LLL"
+					"LLLLLL"
+					"LLLLLL";
+
+	altblocks[2] =	"      %%%" 
+					"      %%%"
+					"%%%%%%%%%"
+					"%%%%%%%%%";
+
+	altblocks[11] = "%%%" 
+					"%%%"
+					"%%%"
+					"%%%"
+					"%%%%%%"
+					"%%%%%%";
+
+	altblocks[12] = "%%%%%%%%%"
+					"%%%%%%%%%"
+					"%%%      "
+					"%%%      ";
+
+	altblocks[13] = "%%%%%%"
+					"%%%%%%"
+					"   %%%"
+					"   %%%"
+					"   %%%"
+					"   %%%";
+
+	altblocks[3] =	"oooooo"
+					"oooooo"
+					"oooooo"
+					"oooooo";
+
+	altblocks[4] =	"   ssssss"
+					"   ssssss"
+					"ssssss   "
+					"ssssss   ";
+
+	altblocks[14] = "sss   "
+					"sss   "
+					"ssssss"
+					"ssssss"
+					"   sss"
+					"   sss";
+	
+	altblocks[15] =	"   ssssss"
+					"   ssssss"
+					"ssssss   "
+					"ssssss   ";
+
+	altblocks[5] =	"zzzzzz   " 
+					"zzzzzz   "
+					"   zzzzzz"
+					"   zzzzzz";
+
+	altblocks[16] = "   zzz"
+					"   zzz"
+					"zzzzzz"
+					"zzzzzz"
+					"zzz   "
+					"zzz   ";
+
+	altblocks[6] =	"   TTT   "
+					"   TTT   "
+					"TTTTTTTTT"
+					"TTTTTTTTT";
+
+	altblocks[17] = "   TTT   "
+					"   TTT   "
+					"TTTTTTTTT"
+					"TTTTTTTTT";
+
+	
+	
 }
 
 
@@ -85,7 +182,7 @@ Block::Block(int board_width, int board_height)
 			this->height = 8;
 			this->coord_x = generate_coord_x(board_width, this->width);
 			break;
-		case 1: // J
+		case 1: // L
 			this->block =	"LLL      " //4
 							"LLL      "
 							"LLLLLLLLL"
@@ -94,7 +191,7 @@ Block::Block(int board_width, int board_height)
 			this->height = 4;
 			this->coord_x = generate_coord_x(board_width, this->width);
 			break;
-		case 2: // L
+		case 2: // J
 			this->block =	"      %%%" //4
 							"      %%%"
 							"%%%%%%%%%"

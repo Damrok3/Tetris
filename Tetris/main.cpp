@@ -6,8 +6,8 @@
 #include <thread>
 #include <conio.h>
 
-void block_update(Board&, std::vector<Block*>&);
-void board_update(Board&, std::vector<Block*>&);
+void block_update(Board&, Block*&);
+void board_update(Board&, Block*&);
 bool check_if_block_intersects(Board&, Block*, short int);
 void setCursorPosition(int, int);
 inline int get_arrow_key_input();
@@ -24,24 +24,23 @@ std::chrono::milliseconds timespan(200);
 int main()
 {
 	Board board(32, 42);
-	std::vector<Block*> blocks;
+	Block* block = nullptr;
 	//main loop
 	while (true)
 	{
-		block_update(board, blocks);
-		board_update(board, blocks);
+		block_update(board, block);
+		board_update(board, block);
 		std::cout << board << std::flush;
 		setCursorPosition(0, 0);
 		//system("pause");
 		std::this_thread::sleep_for(timespan);
 	}
-	
+	delete block;
 	return 0;
 }
 
-void board_update(Board& b, std::vector<Block*>& blocks)
+void board_update(Board& b, Block*& block)
 {
-	//WIP
 	char** board = b.get_board();
 	char** board_buffer = b.get_board_buffer();
 	for (int i = 0; i < b.get_y(); i++)
@@ -51,69 +50,55 @@ void board_update(Board& b, std::vector<Block*>& blocks)
 			board[i][j] = board_buffer[i][j];
 		}
 	}
-	for (int i = 0; i < blocks.size(); i++)
-	{
-		if (blocks[i]->is_atb() == false)
+		if (block != nullptr && block->is_atb() == false)
 		{
-			int block_y = blocks[i]->get_y();
-			int block_x = blocks[i]->get_x();
-			int block_width = blocks[i]->get_width();
-			int block_height = blocks[i]->get_height();
-			std::string block = blocks[i]->get_block();
+			int block_y = block->get_y();
+			int block_x = block->get_x();
+			int block_width = block->get_width();
+			int block_height = block->get_height();
+			std::string block_str = block->get_block();
 			int index = 0;
 			for (int y = block_y; y < block_y + block_height; y++)
 			{
 				for (int x = block_x; x < block_x + block_width; x++)
 				{
-					if (block[index] != ' ')
+					if (block_str[index] != ' ')
 					{
-						board[y][x] = block[index];
+						board[y][x] = block_str[index];
 					}
 					index++;
 				}
-			}
-			break;
+			}	
 		}
-	}
 }
 
-void block_update(Board& b, std::vector<Block*>& blocks)
+void block_update(Board& b, Block*& block)
 {
 	int input = get_arrow_key_input();
 	int i = 0;
-	for (i; i < blocks.size(); i++)
-	{
-		if (blocks[i] -> is_atb() == true)
-		{
-			continue;
-		}
-		else
-		{
-			break;
-		}
-	}
 	// all blocks are on the bottom, time to generate a new one
-	if (i == blocks.size())
+	if (block == nullptr || block->is_atb())
 	{
-		blocks.push_back(new Block(b.get_x(), b.get_y()));
+		delete block;
+		block = new Block(b.get_x(), b.get_y());
 	}
 	//block still in the air
 	else 
 	{
-		if (blocks[i]->get_y() < b.get_y() - blocks[i]->get_height() - 1 && !check_if_block_intersects(b, blocks[i], 0))
+		if (block->get_y() < b.get_y() - block->get_height() - 1 && !check_if_block_intersects(b, block, 0))
 		{
-			blocks[i]->set_y(blocks[i]->get_y() + 1);
+			block->set_y(block->get_y() + 1);
 			if (input != 0)
 			{
 				switch (input)
 				{
 					case 75:
-						if(blocks[i]->get_x() > 3 && !check_if_block_intersects(b, blocks[i], 1))
-							blocks[i]->set_x(blocks[i]->get_x() - 3);
+						if(block->get_x() > 3 && !check_if_block_intersects(b, block, 1))
+							block->set_x(block->get_x() - 3);
 						break;
 					case 77:
-						if (blocks[i]->get_x() < b.get_x() - blocks[i]->get_width() - 2 && !check_if_block_intersects(b, blocks[i], 2))
-							blocks[i]->set_x(blocks[i]->get_x() + 3);
+						if (block->get_x() < b.get_x() - block->get_width() - 2 && !check_if_block_intersects(b, block, 2))
+							block->set_x(block->get_x() + 3);
 						break;
 					
 				}
@@ -121,7 +106,7 @@ void block_update(Board& b, std::vector<Block*>& blocks)
 		}
 		else
 		{
-			blocks[i]->set_atb();
+			block->set_atb();
 			char** board_buffer = b.get_board_buffer();
 			char** board = b.get_board();
 			for (int i = 0; i < b.get_y(); i++)
