@@ -13,9 +13,9 @@ public:
 	Board(int, int);
 	~Board();
 	//return width of the board
-	int get_x() { return x; }
+	int get_width() { return x; }
 	//return height of the board
-	int get_y() { return y; }
+	int get_height() { return y; }
 	//return a pointer to 2d char array
 	char** get_board() { return board; }
 	char** get_board_buffer() { return board_buffer; }
@@ -30,12 +30,16 @@ private:
 	int coord_x = 0;
 	int coord_y = 1;
 	int id;
+	int rotation = 0;
 	bool at_the_bottom = false;
 	std::string block;
 	int width = 0;
 	int height = 0;
 
 public:
+	
+	int get_rotation() { return rotation; }
+
 	//takes in width and height of the board, in order to adjust coordinate range of where it can spawn to scale of the board
 	Block(int, int);
 
@@ -65,7 +69,8 @@ public:
 	//return block height
 	int get_height() { return height; }
 
-	void rotate();
+	//rotate the block
+	void rotate(int);
 
 	//returns string which contains shape of the block
 	std::string get_block() { return block; }

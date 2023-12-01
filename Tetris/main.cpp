@@ -43,33 +43,34 @@ void board_update(Board& b, Block*& block)
 {
 	char** board = b.get_board();
 	char** board_buffer = b.get_board_buffer();
-	for (int i = 0; i < b.get_y(); i++)
+	for (int i = 0; i < b.get_height(); i++)
 	{
-		for (int j = 0; j < b.get_x(); j++)
+		for (int j = 0; j < b.get_width(); j++)
 		{
 			board[i][j] = board_buffer[i][j];
 		}
 	}
-		if (block != nullptr && block->is_atb() == false)
+	int rotation = block->get_rotation();
+	if (block != nullptr && block->is_atb() == false)
+	{
+		int block_y = block->get_y();
+		int block_x = block->get_x();
+		int block_width = block->get_width();
+		int block_height = block->get_height();
+		std::string block_str = block->get_block();
+		int index = 0;
+		for (int y = block_y; y < block_y + block_height; y++)
 		{
-			int block_y = block->get_y();
-			int block_x = block->get_x();
-			int block_width = block->get_width();
-			int block_height = block->get_height();
-			std::string block_str = block->get_block();
-			int index = 0;
-			for (int y = block_y; y < block_y + block_height; y++)
+			for (int x = block_x; x < block_x + block_width; x++)
 			{
-				for (int x = block_x; x < block_x + block_width; x++)
+				if (block_str[index] != ' ')
 				{
-					if (block_str[index] != ' ')
-					{
-						board[y][x] = block_str[index];
-					}
-					index++;
+					board[y][x] = block_str[index];
 				}
-			}	
-		}
+				index++;
+			}
+		}	
+	}
 }
 
 void block_update(Board& b, Block*& block)
@@ -80,12 +81,12 @@ void block_update(Board& b, Block*& block)
 	if (block == nullptr || block->is_atb())
 	{
 		delete block;
-		block = new Block(b.get_x(), b.get_y());
+		block = new Block(b.get_width(), b.get_height());
 	}
 	//block still in the air
 	else 
 	{
-		if (block->get_y() < b.get_y() - block->get_height() - 1 && !check_if_block_intersects(b, block, 0))
+		if (block->get_y() < b.get_height() - block->get_height() - 1 && !check_if_block_intersects(b, block, 0))
 		{
 			block->set_y(block->get_y() + 1);
 			if (input != 0)
@@ -97,8 +98,11 @@ void block_update(Board& b, Block*& block)
 							block->set_x(block->get_x() - 3);
 						break;
 					case 77:
-						if (block->get_x() < b.get_x() - block->get_width() - 2 && !check_if_block_intersects(b, block, 2))
+						if (block->get_x() < b.get_width() - block->get_width() - 2 && !check_if_block_intersects(b, block, 2))
 							block->set_x(block->get_x() + 3);
+						break;
+					case 72:
+						block->rotate(b.get_width());
 						break;
 					
 				}
@@ -109,9 +113,9 @@ void block_update(Board& b, Block*& block)
 			block->set_atb();
 			char** board_buffer = b.get_board_buffer();
 			char** board = b.get_board();
-			for (int i = 0; i < b.get_y(); i++)
+			for (int i = 0; i < b.get_height(); i++)
 			{
-				for (int j = 0; j < b.get_x(); j++)
+				for (int j = 0; j < b.get_width(); j++)
 				{
 					board_buffer[i][j] = board[i][j];
 				}
