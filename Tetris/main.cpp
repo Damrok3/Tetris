@@ -13,14 +13,14 @@ void setCursorPosition(int, int);
 void setConsoleCursorVisibility(bool);
 inline int get_arrow_key_input();
 
-//stuff for checking exec times vvv
+////stuff for checking exec times vvv
 //auto start = std::chrono::high_resolution_clock::now();
 //...
 //auto end = std::chrono::high_resolution_clock::now();
 //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 //std::cout << "exec time: " << duration.count() << std::endl;
 
-std::chrono::milliseconds timespan(0);
+std::chrono::milliseconds timespan(200);
 
 int main()
 {
@@ -31,9 +31,14 @@ int main()
 	//main loop
 	while (true)
 	{
+		auto start = std::chrono::high_resolution_clock::now();
 		block_update(board, block);
 		board_update(board, block);
-		std::cout << board << std::flush;
+		std::cout << board ;
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+		std::cout << "exec time: " << duration.count()<<"   aa" << std::endl;
+		
 		setCursorPosition(0, 0);
 		//system("pause");
 		std::this_thread::sleep_for(timespan);
@@ -53,7 +58,6 @@ void board_update(Board& b, Block*& block)
 			board[i][j] = board_buffer[i][j];
 		}
 	}
-	int rotation = block->get_rotation();
 	if (block != nullptr && block->is_atb() == false)
 	{
 		int block_y = block->get_y();
@@ -107,8 +111,15 @@ void block_update(Board& b, Block*& block)
 					case 72:
 						block->rotate(b.get_width());
 						break;
+					case 80:
+						timespan = std::chrono::milliseconds(0);
+						break;
 					
 				}
+			}
+			else
+			{
+				timespan = std::chrono::milliseconds(200);
 			}
 		}
 		else
