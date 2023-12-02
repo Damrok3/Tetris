@@ -10,6 +10,7 @@ void block_update(Board&, Block*&);
 void board_update(Board&, Block*&);
 bool check_if_block_intersects(Board&, Block*, short int);
 void setCursorPosition(int, int);
+void setConsoleCursorVisibility(bool);
 inline int get_arrow_key_input();
 
 //stuff for checking exec times vvv
@@ -19,10 +20,12 @@ inline int get_arrow_key_input();
 //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 //std::cout << "exec time: " << duration.count() << std::endl;
 
-std::chrono::milliseconds timespan(200);
+std::chrono::milliseconds timespan(0);
 
 int main()
 {
+	setConsoleCursorVisibility(false);
+
 	Board board(32, 42);
 	Block* block = nullptr;
 	//main loop
@@ -170,6 +173,17 @@ void setCursorPosition(int x , int y)
 	static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD coord = { (SHORT)x, (SHORT)y };
 	SetConsoleCursorPosition(hOut, coord);
+}
+
+void setConsoleCursorVisibility(bool showFlag)
+{
+	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_CURSOR_INFO     cursorInfo;
+
+	GetConsoleCursorInfo(out, &cursorInfo);
+	cursorInfo.bVisible = showFlag; // set the cursor visibility
+	SetConsoleCursorInfo(out, &cursorInfo);
 }
 
 inline int get_arrow_key_input()
