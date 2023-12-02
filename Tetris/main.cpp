@@ -11,6 +11,7 @@ void board_update(Board&, Block*&);
 bool check_if_block_intersects(Board&, Block*, short int);
 void setCursorPosition(int, int);
 void setConsoleCursorVisibility(bool);
+void check_for_down_arrow_press();
 inline int get_arrow_key_input();
 
 ////stuff for checking exec times vvv
@@ -31,16 +32,11 @@ int main()
 	//main loop
 	while (true)
 	{
-		auto start = std::chrono::high_resolution_clock::now();
 		block_update(board, block);
 		board_update(board, block);
-		std::cout << board ;
-		auto end = std::chrono::high_resolution_clock::now();
-		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-		std::cout << "exec time: " << duration.count()<<"   aa" << std::endl;
-		
+		std::cout << board << std::flush;
 		setCursorPosition(0, 0);
-		//system("pause");
+		check_for_down_arrow_press();
 		std::this_thread::sleep_for(timespan);
 	}
 	delete block;
@@ -93,6 +89,7 @@ void block_update(Board& b, Block*& block)
 	//block still in the air
 	else 
 	{
+
 		if (block->get_y() < b.get_height() - block->get_height() - 1 && !check_if_block_intersects(b, block, 0))
 		{
 			block->set_y(block->get_y() + 1);
@@ -111,15 +108,7 @@ void block_update(Board& b, Block*& block)
 					case 72:
 						block->rotate(b.get_width());
 						break;
-					case 80:
-						timespan = std::chrono::milliseconds(0);
-						break;
-					
 				}
-			}
-			else
-			{
-				timespan = std::chrono::milliseconds(200);
 			}
 		}
 		else
@@ -195,6 +184,18 @@ void setConsoleCursorVisibility(bool showFlag)
 	GetConsoleCursorInfo(out, &cursorInfo);
 	cursorInfo.bVisible = showFlag; // set the cursor visibility
 	SetConsoleCursorInfo(out, &cursorInfo);
+}
+
+void check_for_down_arrow_press()
+{
+	if (GetAsyncKeyState(VK_DOWN) != 0)
+	{
+		timespan = std::chrono::milliseconds(20);
+	}
+	else
+	{
+		timespan = std::chrono::milliseconds(200);
+	}
 }
 
 inline int get_arrow_key_input()

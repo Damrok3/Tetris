@@ -1,6 +1,7 @@
 #include "tetris.h"
 #include <iostream>
 #include <random>
+#include <sstream>
 
 int generate_coord_x(int, int);
 
@@ -428,16 +429,18 @@ Block::Block(int board_width, int board_height)
 	}
 }
 
-std::ostream & operator<<(std::ostream& os, const Board& b)
+std::ostream& operator<<(std::ostream& os, const Board& b)
 {
+	std::stringstream buffer;
 	for (int i = 0; i < b.y; i++)
 	{
 		for (int j = 0; j < b.x; j++)
 		{
-			os << b.board[i][j];
+			buffer << b.board[i][j];
 		}
-		os << std::endl;
+		buffer << '\n';
 	}
+	os << buffer.str();
 	return os;
 }
 
