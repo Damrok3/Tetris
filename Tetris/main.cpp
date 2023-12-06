@@ -23,6 +23,7 @@ void score_control(Board&, char**);
 //std::cout << "exec time: " << duration.count() << std::endl;
 
 std::chrono::milliseconds timespan(200);
+int score = 0;
 
 //remove_line() is fucked, need to fix
 
@@ -39,7 +40,7 @@ int main()
 		block_update(board, block);
 		board_update(board, block);
 		setCursorPosition(0, 0);
-		std::cout << board << std::flush;
+		std::cout << board << "your score is : "<<score<<'!' << std::flush;
 		check_for_down_arrow_press();
 		std::this_thread::sleep_for(timespan);
 	}
@@ -88,6 +89,7 @@ void score_control(Board& b, char** board)
 {
 	if (int row = b.check_if_score())
 	{
+		score++;
 		std::string temp;
 		for (int i = 0; i < 3; i++)
 		{
