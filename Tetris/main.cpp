@@ -39,11 +39,10 @@ int main()
 		block_update(board, block);
 		board_update(board, block);
 		setCursorPosition(0, 0);
-		std::cout << board << "your score is : "<<score<<'!' << std::flush;
+		std::cout << board << "your score is : "<<score<<"!\n" << std::flush;
 		check_for_down_arrow_press();
 		std::this_thread::sleep_for(timespan);
 	}
-	delete block;
 	std::cout << "Game Over!\n";
 	system("pause");
 
