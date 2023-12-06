@@ -20,6 +20,9 @@ public:
 	char** get_board() { return board; }
 	char** get_board_buffer() { return board_buffer; }
 	friend std::ostream& operator<< (std::ostream&, const Board&);
+	//checks for filled row, when it detects one returns the index, otherwise returns false
+	int check_if_score();
+	void remove_line(int);
 	
 };
 
@@ -74,14 +77,4 @@ public:
 
 	//returns string which contains shape of the block
 	std::string get_block() { return block; }
-};
-
-class Shape 
-{
-private:
-	int id;
-	std::string shape;
-public:
-	Shape();
-	~Shape() = default;
 };

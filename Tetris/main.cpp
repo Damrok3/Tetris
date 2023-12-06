@@ -13,6 +13,7 @@ void setCursorPosition(int, int);
 void setConsoleCursorVisibility(bool);
 void check_for_down_arrow_press();
 inline int get_arrow_key_input();
+void score_control(Board&, char**);
 
 ////stuff for checking exec times vvv
 //auto start = std::chrono::high_resolution_clock::now();
@@ -23,6 +24,8 @@ inline int get_arrow_key_input();
 
 std::chrono::milliseconds timespan(200);
 
+//remove_line() is fucked, need to fix
+
 int main()
 {
 	setConsoleCursorVisibility(false);
@@ -32,10 +35,11 @@ int main()
 	//main loop
 	while (true)
 	{
+		
 		block_update(board, block);
 		board_update(board, block);
-		std::cout << board << std::flush;
 		setCursorPosition(0, 0);
+		std::cout << board << std::flush;
 		check_for_down_arrow_press();
 		std::this_thread::sleep_for(timespan);
 	}
@@ -72,7 +76,41 @@ void board_update(Board& b, Block*& block)
 				}
 				index++;
 			}
-		}	
+		}
+	}
+	if (block != nullptr && block->is_atb())
+	{
+		score_control(b, board);
+	}
+}
+
+void score_control(Board& b, char** board)
+{
+	if (int row = b.check_if_score())
+	{
+		std::string temp;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 1; j < b.get_width() - 1; j++)
+			{
+				temp += board[row][j];
+				board[row][j] = 219;
+				board[row - 1][j] = 219;
+			}
+			setCursorPosition(0, 0);
+			std::cout << b << std::flush;
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			for (int j = 1; j < b.get_width() - 1; j++)
+			{
+				board[row][j] = temp[j];
+				board[row - 1][j] = temp[j];
+			}
+			setCursorPosition(0, 0);
+			std::cout << b << std::flush;
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		}
+		b.remove_line(row);
+		score_control(b, board);
 	}
 }
 

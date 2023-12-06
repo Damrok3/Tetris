@@ -50,6 +50,61 @@ Board::~Board()
 	delete[] board_buffer;
 }
 
+void Board::remove_line(int row)
+{
+	char** temp_arr = new char* [this->y];
+	for (int i = 0; i < this->y; i++)
+	{
+		temp_arr[i] = new char[this->x];
+	}
+	int index = 0;
+
+	for (int i = 0; index < this->y; i++)
+	{
+		if (i == row - 1)
+		{
+			index += 2;
+		}
+		for (int j = 0; j < this->x && index < this->y; j++)
+		{
+			temp_arr[i][j] = board[index][j];
+		}
+		index++;
+	}
+	for (int i = 3; i < this->y; i++)
+	{
+		for (int j = 0; j < this->x; j++)
+		{
+			board[i][j] = temp_arr[i - 2][j];
+			board_buffer[i][j] = temp_arr[i - 2][j];
+			
+		}
+		
+	}
+}
+
+int Board::check_if_score()
+{
+	
+	int i = this->y - 2;
+	for (i; i > 1; i--)
+	{
+		int counter = 0;
+		for (int j = 0; j < this->x; j++)
+		{
+			if (board[i][j] != ' ')
+			{
+				counter++;
+			}
+		}
+		if (counter == this->x)
+		{
+			return i;
+		}
+	}
+	return false;
+}
+
 void Block::rotate(int board_width)
 {
 	std::string altblocks[19];
@@ -373,7 +428,7 @@ Block::Block(int board_width, int board_height)
 			this->coord_x = generate_coord_x(board_width, this->width);
 			break;
 		case 1: // L
-			this->block =	"LLL      " //4
+			this->block =	"LLL      " //4 
 							"LLL      "
 							"LLLLLLLLL"
 							"LLLLLLLLL";
