@@ -23,8 +23,7 @@ void score_control(Board&, char**);
 //std::cout << "exec time: " << duration.count() << std::endl;
 
 std::chrono::milliseconds timespan(200);
-
-//remove_line() is fucked, need to fix
+bool game_over = false;
 
 int main()
 {
@@ -33,7 +32,7 @@ int main()
 	Board board(32, 42);
 	Block* block = nullptr;
 	//main loop
-	while (true)
+	while (!game_over)
 	{
 		
 		block_update(board, block);
@@ -44,6 +43,9 @@ int main()
 		std::this_thread::sleep_for(timespan);
 	}
 	delete block;
+	std::cout << "Game Over!\n";
+	system("pause");
+
 	return 0;
 }
 
@@ -121,6 +123,12 @@ void block_update(Board& b, Block*& block)
 	// all blocks are on the bottom, time to generate a new one
 	if (block == nullptr || block->is_atb())
 	{
+		if (block != nullptr && block->is_atb() && block->get_y() == 1)
+		{
+			game_over = true;
+			delete block;
+			return;
+		}
 		delete block;
 		block = new Block(b.get_width(), b.get_height());
 	}
