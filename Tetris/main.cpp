@@ -8,7 +8,6 @@
 
 void block_update(Board&, Block*&);
 void board_update(Board&, Block*&);
-bool check_if_block_intersects(Board&, Block*, short int);
 void setCursorPosition(int, int);
 void setConsoleCursorVisibility(bool);
 void check_for_down_arrow_press();
@@ -35,16 +34,15 @@ int main()
 	//main loop
 	while (!game_over)
 	{
-		
 		block_update(board, block);
 		board_update(board, block);
 		setCursorPosition(0, 0);
-		std::cout << board << "your score is : "<<score<<"!\n" << std::flush;
+		std::cout << board << "your score is : " << score << "!\n" << std::flush;
 		check_for_down_arrow_press();
 		std::this_thread::sleep_for(timespan);
 	}
-	std::cout << "Game Over!\n";
-	system("pause");
+	std::cout << "Game Over!\nPress enter to exit";
+	std::cin.get();
 
 	return 0;
 }
@@ -126,18 +124,21 @@ void block_update(Board& b, Block*& block)
 	{
 		if (block != nullptr && block->is_atb() && block->get_y() == 1)
 		{
-			game_over = true;
 			delete block;
-			return;
+			game_over = true;
+			
 		}
-		delete block;
-		block = new Block(b.get_width(), b.get_height());
+		else
+		{
+			delete block;
+			block = new Block(b.get_width(), b.get_height());
+		}
 	}
 	//block still in the air
 	else 
 	{
 
-		if (block->get_y() < b.get_height() - block->get_height() - 1 && !check_if_block_intersects(b, block, 0))
+		if (block->get_y() < b.get_height() - block->get_height() - 1 && !block->check_if_block_intersects(b, 0))
 		{
 			block->set_y(block->get_y() + 1);
 			if (input != 0)
@@ -145,11 +146,11 @@ void block_update(Board& b, Block*& block)
 				switch (input)
 				{
 					case 75:
-						if(block->get_x() > 3 && !check_if_block_intersects(b, block, 1))
+						if(block->get_x() > 3 && !block->check_if_block_intersects(b, 1))
 							block->set_x(block->get_x() - 3);
 						break;
 					case 77:
-						if (block->get_x() < b.get_width() - block->get_width() - 2 && !check_if_block_intersects(b, block, 2))
+						if (block->get_x() < b.get_width() - block->get_width() - 2 && !block->check_if_block_intersects(b, 2))
 							block->set_x(block->get_x() + 3);
 						break;
 					case 72:
@@ -174,47 +175,6 @@ void block_update(Board& b, Block*& block)
 	}
 }
 
-bool check_if_block_intersects(Board& b, Block* block, short int direction)
-{
-	int index = 0;
-	char** board = b.get_board_buffer();
-	std::string block_str = block->get_block();
-	bool intersects = false;
-	for (int i = block->get_y(); i < block->get_y() + block->get_height(); i++)
-	{
-		for (int j = block->get_x(); j < block->get_x() + block->get_width(); j++)
-		{
-			switch(direction)
-			{
-				case 0:
-					if (board[i + 1][j] != ' ' && block_str[index] != ' ')
-					{
-						intersects = true;
-						return intersects;
-					}
-					break;
-			
-				case 1:
-					if (board[i][j - 1] != ' ' && block_str[index] != ' ')
-					{
-						intersects = true;
-						return intersects;
-					}
-					break;
-				case 2:
-					if (board[i][j + 1] != ' ' && block_str[index] != ' ')
-					{
-						intersects = true;
-						return intersects;
-					}
-					break;
-			}
-			index++;
-		}
-	}
-	return intersects;
-}
-
 void setCursorPosition(int x , int y)
 {
 	static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -225,9 +185,7 @@ void setCursorPosition(int x , int y)
 void setConsoleCursorVisibility(bool showFlag)
 {
 	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	CONSOLE_CURSOR_INFO     cursorInfo;
-
+	CONSOLE_CURSOR_INFO cursorInfo;
 	GetConsoleCursorInfo(out, &cursorInfo);
 	cursorInfo.bVisible = showFlag; // set the cursor visibility
 	SetConsoleCursorInfo(out, &cursorInfo);

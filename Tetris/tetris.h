@@ -77,4 +77,7 @@ public:
 
 	//returns string which contains shape of the block
 	std::string get_block() { return block; }
+
+	//returns true when it detects collision of current block with other things inside of the board
+	bool check_if_block_intersects(Board&, short int);
 };

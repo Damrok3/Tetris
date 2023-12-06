@@ -484,6 +484,46 @@ Block::Block(int board_width, int board_height)
 	}
 }
 
+bool Block::check_if_block_intersects(Board& b, short int direction)
+{
+	int index = 0;
+	char** board = b.get_board_buffer();
+	bool intersects = false;
+	for (int i = this->get_y(); i < this->get_y() + this->get_height(); i++)
+	{
+		for (int j = this->get_x(); j < this->get_x() + this->get_width(); j++)
+		{
+			switch (direction)
+			{
+			case 0:
+				if (board[i + 1][j] != ' ' && this->block[index] != ' ')
+				{
+					intersects = true;
+					return intersects;
+				}
+				break;
+
+			case 1:
+				if (board[i][j - 1] != ' ' && this->block[index] != ' ')
+				{
+					intersects = true;
+					return intersects;
+				}
+				break;
+			case 2:
+				if (board[i][j + 1] != ' ' && this->block[index] != ' ')
+				{
+					intersects = true;
+					return intersects;
+				}
+				break;
+			}
+			index++;
+		}
+	}
+	return intersects;
+}
+
 std::ostream& operator<<(std::ostream& os, const Board& b)
 {
 	std::stringstream buffer;
